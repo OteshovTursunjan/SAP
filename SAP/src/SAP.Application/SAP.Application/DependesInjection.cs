@@ -19,6 +19,7 @@ public static class DependesInjection
     {
         services.AddScoped<IUserService,UserService>();
         services.AddScoped<IEmployeeService,EmployeeService>();
+        services.AddScoped<IItemService,ItemService>();
     }
     private static void RegisterCaching(this IServiceCollection services)
     {

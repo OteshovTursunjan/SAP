@@ -24,16 +24,10 @@ namespace SAP.API.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
             try
             {
                 var res = await _employeeService.CreateEmployee(createEmployeeModel);
-
-                // Возвращаем 201 Created вместо 200 OK
                 return StatusCode(StatusCodes.Status201Created, res);
-
-                // Альтернативный вариант с Created:
-                // return Created($"/api/employe/{res.EmployeeID}", res);
             }
             catch (UnauthorizedAccessException)
             {
@@ -53,7 +47,7 @@ namespace SAP.API.Controllers
             }
         }
 
-        // Дополнительно: метод для получения сотрудника (если нужен)
+      
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(EmployeeResponseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -64,6 +58,7 @@ namespace SAP.API.Controllers
             var res = await _employeeService.GetEmployeeById(id);
             return Ok(res);
         }
+
         [HttpGet("GetEmployees")]
         public async Task<IActionResult> GetAllEmployee()
         {
@@ -72,6 +67,7 @@ namespace SAP.API.Controllers
             var res = await _employeeService.GetAllEmployees();
             return Ok(res);
         }
+
         [HttpDelete("DeleteEmployees{id}")]
         [ProducesResponseType(typeof(EmployeeResponseModel), StatusCodes.Status204NoContent)]
         public async Task<IActionResult> DeleteEmployee(int id)
