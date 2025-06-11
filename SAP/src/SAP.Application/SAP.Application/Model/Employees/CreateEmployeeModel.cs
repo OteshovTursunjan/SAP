@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Swashbuckle.AspNetCore.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,15 @@ namespace SAP.Application.Model.Employees;
 
 public class CreateEmployeeModel
 {
-    public int Branch { get; set; }
-    public int Department { get; set; }
+    public required string Branch { get; set; }
+    public required string Department { get; set; }
     public required string FirstName { get; set; }
     public string? JobTitle { get; set; }
     public required string LastName { get; set; }
-    public string? Remarks { get; set; }
     public string? WorkCountryCode { get; set; }
+    public string? MobilePhone { get; set; }
+    public string? OfficePhone { get; set; }
+
+    public string? eMail { get; set; }
 
 }

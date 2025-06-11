@@ -20,10 +20,11 @@ public static class DependesInjection
         services.AddScoped<IUserService,UserService>();
         services.AddScoped<IEmployeeService,EmployeeService>();
         services.AddScoped<IItemService,ItemService>();
+        services.AddScoped<IBussinesPartnerService,BussinesPartnerService>();
     }
     private static void RegisterCaching(this IServiceCollection services)
     {
-        // Регистрация кэша в памяти
+        
         services.AddMemoryCache();
     }
 }

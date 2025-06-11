@@ -52,6 +52,15 @@ public class ItemController : Controller
         var res = await _itemService.GetAllItems();
         return Ok(res);
     }
+    //[HttpPatch("UpdateItem({id})")]
+    //public async Task<IActionResult> UpdateItem(string id,[FromBody]string name)
+    //{
+    //    if (!ModelState.IsValid)
+    //        return BadRequest(ModelState);
+    //    var res = await _itemService.UpdateItem(id, name);
+    //    return Ok(res);
+    //}
+
 
     [HttpDelete("DeleteItems{id}")]
     [ProducesResponseType(typeof(ItemsResponseModel), StatusCodes.Status204NoContent)]

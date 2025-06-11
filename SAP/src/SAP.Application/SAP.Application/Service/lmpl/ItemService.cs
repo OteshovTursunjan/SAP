@@ -115,6 +115,35 @@ public class ItemService : IItemService
 
         throw new InvalidOperationException($"Failed to get employees. Status: {response.StatusCode}. Response: {responseContent}");
     }
+    //public async Task<bool> UpdateItem(string id, string newItemName)
+    //{
+    //    var session = _sessionStorage.Session;
+    //    if (session == null || string.IsNullOrEmpty(session.B1Session) || string.IsNullOrEmpty(session.RouteId))
+    //        throw new Exception("SAP session is not initialized.");
+
+    //    var client = _httpClientFactory.CreateClient();
+    //    client.DefaultRequestHeaders.Add("Cookie", $"B1SESSION={session.B1Session}; ROUTEID={session.RouteId}");
+
+    //    var requestUrl = $"{_baseUrl2}('{id}')";
+
+    //    var payload = new
+    //    {
+    //        ItemName = newItemName
+    //    };
+
+    //    var jsonPayload = JsonSerializer.Serialize(payload);
+    //    var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+    //    var response = await client.PatchAsync(requestUrl, content);
+    //    var responseContent = await response.Content.ReadAsStringAsync();
+
+    //    if (response.IsSuccessStatusCode)
+    //    {
+    //        return true;
+    //    }
+
+    //    return false;
+    //}
 
     public async Task<bool> DeleteItem(string id)
     {
@@ -127,6 +156,7 @@ public class ItemService : IItemService
 
         var requestUrl = $"{_baseUrl2}('{id}')";
         var response = await client.DeleteAsync(requestUrl);
+        
         var responseContent = await response.Content.ReadAsStringAsync();
 
         if (response.IsSuccessStatusCode)

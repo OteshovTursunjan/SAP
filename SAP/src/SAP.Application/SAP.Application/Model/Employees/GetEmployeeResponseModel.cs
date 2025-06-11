@@ -17,6 +17,9 @@ public  class GetEmployeeResponseModel
     public required string LastName { get; set; }
     public string? Remarks { get; set; }
     public string? WorkCountryCode { get; set; }
+    public string? MobilePhone { get; set; }
+    public string? OfficePhone { get; set; }
+    public string? eMail { get; set; }
 }
 public class EmployeeListWrapper
 {
