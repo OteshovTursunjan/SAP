@@ -22,6 +22,7 @@ public static class DependesInjection
         services.AddScoped<IItemService,ItemService>();
         services.AddScoped<IBussinesPartnerService,BussinesPartnerService>();
         services.AddScoped<IInvoicesService,InvoicesService>();
+        services.AddScoped<IPurchaseService,PurchaseService>();
     }
     private static void RegisterCaching(this IServiceCollection services)
     {

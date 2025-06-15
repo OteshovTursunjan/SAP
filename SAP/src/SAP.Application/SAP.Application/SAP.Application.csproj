@@ -7,8 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\IncomingPayments\" />
-    <Folder Include="Model\Purchase\" />
     <Folder Include="Model\ChartOfAccounts\" />
   </ItemGroup>
 

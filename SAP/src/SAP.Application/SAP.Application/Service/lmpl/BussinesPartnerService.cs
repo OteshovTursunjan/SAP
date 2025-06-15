@@ -137,4 +137,130 @@ public class BussinesPartnerService : IBussinesPartnerService
             return null;
         }
     }
+
+    public async Task<List<BussinesPartnerResponseModel>> FilterBussinesPartnersByPhone(string phone)
+    {
+        var session = _sessionStorage.Session;
+        if (session == null || string.IsNullOrEmpty(session.B1Session) || string.IsNullOrEmpty(session.RouteId))
+            throw new Exception("SAP session is not initialized.");
+
+        var client = _httpClientFactory.CreateClient();
+        client.DefaultRequestHeaders.Add("Cookie", $"B1SESSION={session.B1Session}; ROUTEID={session.RouteId}");
+
+        string safePhone = phone.Replace("'", "''");
+        string requestUrl = $"{_baseUrl}BusinessPartners?$select=CardCode,CardName,CardType,Phone1,Phone2,Address" +
+                            $"&$filter=contains(Phone1,'{safePhone}') or contains(Phone2,'{safePhone}')" +
+                            "&$orderby=CardCode&$top=100";
+
+        var response = await client.GetAsync(requestUrl);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = JsonSerializer.Deserialize<BussinesPartnerListWrapper>(responseContent, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            return result?.Value ?? new List<BussinesPartnerResponseModel>();
+        }
+
+        throw new InvalidOperationException($"Failed to get Business Partners by phone. Status: {response.StatusCode}. Response: {responseContent}");
+    }
+    public async Task<List<BussinesPartnerResponseModel>> FilterBussinesPartnersByAddress(string address)
+    {
+        var session = _sessionStorage.Session;
+        if (session == null || string.IsNullOrEmpty(session.B1Session) || string.IsNullOrEmpty(session.RouteId))
+            throw new Exception("SAP session is not initialized.");
+
+        var client = _httpClientFactory.CreateClient();
+        client.DefaultRequestHeaders.Add("Cookie", $"B1SESSION={session.B1Session}; ROUTEID={session.RouteId}");
+
+        string safeAddress = address.Replace("'", "''");
+        string requestUrl = $"{_baseUrl}BusinessPartners?$select=CardCode,CardName,CardType,Phone1,Phone2,Address" +
+                            $"&$filter=contains(Address,'{safeAddress}')" +
+                            "&$orderby=CardCode&$top=100";
+
+        var response = await client.GetAsync(requestUrl);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = JsonSerializer.Deserialize<BussinesPartnerListWrapper>(responseContent, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            return result?.Value ?? new List<BussinesPartnerResponseModel>();
+        }
+
+        throw new InvalidOperationException($"Failed to get Business Partners by address. Status: {response.StatusCode}. Response: {responseContent}");
+    }
+    public async Task<List<BussinesPartnerResponseModel>> FilterBussinesPartnersByName(string name)
+    {
+        var session = _sessionStorage.Session;
+        if (session == null || string.IsNullOrEmpty(session.B1Session) || string.IsNullOrEmpty(session.RouteId))
+            throw new Exception("SAP session is not initialized.");
+
+        var client = _httpClientFactory.CreateClient();
+        client.DefaultRequestHeaders.Add("Cookie", $"B1SESSION={session.B1Session}; ROUTEID={session.RouteId}");
+
+        // Экранируем апострофы в имени
+        string safeName = name.Replace("'", "''");
+        string requestUrl = $"{_baseUrl}BusinessPartners?$select=CardCode,CardName,CardType,Phone1,Phone2,Address" +
+                            $"&$filter=contains(CardName,'{safeName}')" +
+                            "&$orderby=CardCode&$top=100";
+
+        var response = await client.GetAsync(requestUrl);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = JsonSerializer.Deserialize<BussinesPartnerListWrapper>(responseContent, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            return result?.Value ?? new List<BussinesPartnerResponseModel>();
+        }
+
+        throw new InvalidOperationException($"Failed to get Business Partners by name. Status: {response.StatusCode}. Response: {responseContent}");
+    }
+
+    public async Task<bool> UpdateBussinesPartner(string cardCode, UpdateBussinesPartnerModel updateModel)
+    {
+        var session = _sessionStorage.Session;
+        if (session == null || string.IsNullOrEmpty(session.B1Session) || string.IsNullOrEmpty(session.RouteId))
+            throw new Exception("SAP session is not initialized");
+
+        var client = _httpClientFactory.CreateClient();
+        client.DefaultRequestHeaders.Add("Cookie", $"B1SESSION={session.B1Session};ROUTEID={session.RouteId}");
+
+        var content = new StringContent(
+            JsonSerializer.Serialize(updateModel),
+            Encoding.UTF8,
+            "application/json"
+        );
+
+        // Формируем URL для PATCH запроса
+        var requestUrl = $"{_baseUrl}BusinessPartners('{cardCode}')";
+
+        var request = new HttpRequestMessage(new HttpMethod("PATCH"), requestUrl)
+        {
+            Content = content
+        };
+
+        var response = await client.SendAsync(request);
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        Console.WriteLine($"Response Status Code: {response.StatusCode}");
+        Console.WriteLine($"Response Content: {responseContent}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException($"Failed to update BusinessPartner. Status: {response.StatusCode}. Response: {responseContent}");
+        }
+        return true;
+    }
+
 }
